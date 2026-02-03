@@ -19,9 +19,31 @@ registerSketch('sk2', function (p) {
     let elapsed = p.millis() - startTime;
     let progress = p.constrain(elapsed / duration, 0, 1);
     
-    // Light gray rectangle
-    p.fill(200);
+    // Darker gray rectangle
+    p.fill(160);
     p.rect(rectLeft, 150, 500, 300);
+
+    // Baggage-claim style conveyor belt (narrow)
+    let beltHeight = 18; 
+    let beltY = 150 + 170; 
+    // belt base (lighter, slightly transparent)
+    p.fill(180, 200);
+    p.rect(rectLeft + 10, beltY - beltHeight/2, 500 - 20, beltHeight, 4);
+    // inner belt surface (slightly lighter, transparent)
+    p.fill(200, 200);
+    p.rect(rectLeft + 14, beltY - (beltHeight-6)/2, 500 - 28, beltHeight-6, 3);
+    // edge rails (lighter, transparent)
+    p.fill(190, 200);
+    p.rect(rectLeft + 6, beltY - beltHeight/2 - 4, 6, beltHeight + 8);
+    p.rect(rectLeft + 500 - 12, beltY - beltHeight/2 - 4, 6, beltHeight + 8);
+    // repeating slats to suggest belt movement (darker, slightly transparent)
+    p.fill(110, 220);
+    let slatW = 20;
+    let slatGap = 12;
+    let slatStart = rectLeft + 20;
+    for (let x = slatStart; x < rectLeft + 500 - 20; x += slatW + slatGap) {
+      p.rect(x, beltY - 2, slatW, 6, 2);
+    }
     
     // Calculate suitcase position (moves from left to center-left)
     let suitcaseX = 180 + (suitcaseEndX - 180) * progress;
@@ -32,7 +54,7 @@ registerSketch('sk2', function (p) {
     p.rect(suitcaseX, 265, 90, 70);
     // Suitcase lid
     p.rect(suitcaseX, 265, 90, 20);
-    p.fill(160, 110, 60); // Lighter brown for lid
+    p.fill(160, 110, 60); 
     p.rect(suitcaseX, 265, 90, 15);
     // Handle
     p.stroke(139, 90, 43);
