@@ -83,6 +83,20 @@ registerSketch('sk2', function (p) {
     } else {
       p.text("Your bags are here!", 400, 180);
     }
+
+    // Countdown timer display (mm:ss) inside the dark rectangle, top-right
+    let remaining = Math.max(0, duration - elapsed);
+    // use floor so it shows countdown accurately (00:00 at end)
+    let secs = Math.floor(remaining / 1000);
+    let mins = Math.floor(secs / 60);
+    let s = secs % 60;
+    let timeStr = (mins < 10 ? '0' + mins : '' + mins) + ':' + (s < 10 ? '0' + s : '' + s);
+    p.textSize(18);
+    // place countdown at bottom-center of the dark rectangle
+    p.textAlign(p.CENTER, p.BOTTOM);
+    // rectangle top=150, height=300 -> bottom = 150+300 = 450
+    // move timer a little higher
+    p.text(timeStr, rectLeft + 250, 430);
   };
   p.windowResized = function () { p.resizeCanvas(p.windowWidth, p.windowHeight); };
 });
