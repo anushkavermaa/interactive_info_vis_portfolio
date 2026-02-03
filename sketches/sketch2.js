@@ -73,6 +73,16 @@ registerSketch('sk2', function (p) {
     // Right leg
     p.rect(personX + 3, 315, 8, 30);
     p.noStroke();
+    
+    // Display status text
+    p.fill(0);
+    p.textSize(20);
+    p.textAlign(p.CENTER, p.TOP);
+    if (progress < 1) {
+      p.text("Your bags are on the way!", 400, 180);
+    } else {
+      p.text("Your bags are here!", 400, 180);
+    }
   };
   p.windowResized = function () { p.resizeCanvas(p.windowWidth, p.windowHeight); };
 });
