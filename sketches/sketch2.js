@@ -37,18 +37,22 @@ registerSketch('sk2', function (p) {
     p.circle(480, 245, 25);
     // Body
     p.rect(473, 275, 14, 40);
-    // Set stroke for arms and legs
-    p.stroke(80);
-    p.strokeWeight(2);
-    p.noFill();
     // Left arm
-    p.line(473, 285, 450, 300);
+    p.push();
+    p.translate(473, 285);
+    p.rotate(3 * p.PI / 4);
+    p.rect(0, -4, 40, 8);
+    p.pop();
     // Right arm
-    p.line(487, 285, 510, 300);
+    p.push();
+    p.translate(487, 285);
+    p.rotate(-p.PI / 4);
+    p.rect(0, -4, 40, 8);
+    p.pop();
     // Left leg
-    p.line(477, 315, 470, 345);
+    p.rect(470, 315, 8, 30);
     // Right leg
-    p.line(483, 315, 490, 345);
+    p.rect(483, 315, 8, 30);
     p.noStroke();
   };
   p.windowResized = function () { p.resizeCanvas(p.windowWidth, p.windowHeight); };
