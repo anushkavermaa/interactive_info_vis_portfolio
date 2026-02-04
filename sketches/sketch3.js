@@ -19,7 +19,7 @@ registerSketch('sk3', function (p) {
     };
     
     // Create input controls for departure time
-    let controlY = 20;
+    let controlY = 60;
     
     p.createDiv('Set Departure Time:').position(20, controlY).style('color', '#333').style('font-size', '14px');
     
@@ -184,48 +184,64 @@ registerSketch('sk3', function (p) {
     
     p.fill(180);
     p.textAlign(p.CENTER);
-    p.textSize(10);
+    p.textSize(11);
+    p.textStyle(p.BOLD);
+    p.text("BOARDING COUNTDOWN", x + passWidth / 2, y + passHeight - 80);
+    p.textSize(9);
     p.textStyle(p.NORMAL);
-    p.text("BOARDING STATUS", x + passWidth / 2, y + passHeight - 80);
+    p.text("One bar appears every 5 minutes (starts 1 hour before departure)", x + passWidth / 2, y + passHeight - 66);
     
-    // Calculate progress - based on current time
+    // Calculate minutes until departure
     let currentTime = p.hour() * 60 + p.minute();
-    let progress = 0;
+    let minutesUntilDeparture = departureTime - currentTime;
     
-    if (currentTime < boardingStartTime) {
-      // Before boarding starts
-      progress = 0;
-    } else if (currentTime >= departureTime) {
-      // After departure
-      progress = 1;
+    // Calculate number of bars to show
+    // Countdown starts 60 minutes before, one bar every 5 minutes
+    let totalBars = 12; // 60 minutes / 5 = 12 bars
+    let barsToShow = 0;
+    
+    if (minutesUntilDeparture > 60) {
+      // More than 1 hour before departure - no bars yet
+      barsToShow = 0;
+    } else if (minutesUntilDeparture <= 0) {
+      // At or past departure - all bars shown
+      barsToShow = totalBars;
     } else {
-      // During boarding window
-      progress = (currentTime - boardingStartTime) / (departureTime - boardingStartTime);
+      // Between 60 min and departure - calculate bars
+      let minutesIntoCountdown = 60 - minutesUntilDeparture;
+      barsToShow = Math.floor(minutesIntoCountdown / 5);
     }
     
-    // Draw barcode that fills up over time
-    p.stroke(0);
-    let barcodeX = x + (passWidth - 300) / 2;
-    let barcodeY = y + passHeight - 65;
-    let barcodeWidth = 300;
-    let barcodeHeight = 50;
+    // Draw barcode
+    let barcodeSpacing = 30;
+    let totalBarcodeWidth = totalBars * barcodeSpacing;
+    let barcodeX = x + (passWidth - totalBarcodeWidth) / 2;
+    let barcodeY = y + passHeight - 50;
+    let barcodeHeight = 38;
     
-    let numBars = boardingPass.barcode.length;
-    let barsToShow = Math.floor(numBars * progress);
-    
-    for (let i = 0; i < barsToShow; i++) {
-      let barThickness = (parseInt(boardingPass.barcode[i]) % 3) + 1;
-      p.strokeWeight(barThickness);
-      p.line(barcodeX + i * 23, barcodeY, barcodeX + i * 23, barcodeY + barcodeHeight);
+    for (let i = 0; i < totalBars; i++) {
+      if (i < barsToShow) {
+        // Filled bars
+        p.stroke(0);
+        p.strokeWeight(5);
+        p.line(barcodeX + i * barcodeSpacing, barcodeY, barcodeX + i * barcodeSpacing, barcodeY + barcodeHeight);
+      } else {
+        // Empty bars - light gray
+        p.stroke(220);
+        p.strokeWeight(2);
+        p.line(barcodeX + i * barcodeSpacing, barcodeY, barcodeX + i * barcodeSpacing, barcodeY + barcodeHeight);
+      }
     }
     
     // Show time remaining
-    let minutesUntilDeparture = departureTime - currentTime;
+    p.fill(15, 45, 120);
+    p.textSize(11);
+    p.textStyle(p.BOLD);
     if (minutesUntilDeparture > 0) {
-      p.fill(100);
-      p.textSize(9);
-      p.textStyle(p.NORMAL);
-      p.text(minutesUntilDeparture + " minutes until departure", x + passWidth / 2, y + passHeight - 8);
+      p.text(minutesUntilDeparture + " min until departure | " + barsToShow + "/" + totalBars + " bars", x + passWidth / 2, y + passHeight - 5);
+    } else {
+      p.fill(200, 50, 50);
+      p.text("DEPARTED", x + passWidth / 2, y + passHeight - 5);
     }
   };
   
