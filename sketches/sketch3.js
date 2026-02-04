@@ -18,19 +18,20 @@ registerSketch('sk3', function (p) {
       barcode: "1234567890123"
     };
     
-    // Create input controls for departure time
-    let controlY = 60;
+    // Create input controls for departure time - positioned beside boarding pass
+    let controlX = 40;
+    let controlY = 200;
     
-    p.createDiv('Set Departure Time:').position(20, controlY).style('color', '#333').style('font-size', '14px');
+    p.createDiv('Set Departure Time:').position(controlX, controlY).style('color', '#333').style('font-size', '14px');
     
-    hourInput = p.createInput('14').position(150, controlY).size(40, 25);
+    hourInput = p.createInput('14').position(controlX, controlY + 30).size(40, 25);
     hourInput.attribute('type', 'number');
     hourInput.attribute('min', '0');
     hourInput.attribute('max', '23');
     
-    p.createSpan(' : ').position(195, controlY).style('color', '#333').style('font-size', '18px');
+    p.createSpan(' : ').position(controlX + 45, controlY + 30).style('color', '#333').style('font-size', '18px');
     
-    minuteInput = p.createInput('30').position(210, controlY).size(40, 25);
+    minuteInput = p.createInput('30').position(controlX + 60, controlY + 30).size(40, 25);
     minuteInput.attribute('type', 'number');
     minuteInput.attribute('min', '0');
     minuteInput.attribute('max', '59');
@@ -86,31 +87,22 @@ registerSketch('sk3', function (p) {
     p.textStyle(p.NORMAL);
     p.text("ELECTRONIC TICKET", x + passWidth / 2, y + 55);
     
-    // DEPARTURE TIME - Prominent but elegant
+    // DEPARTURE TIME - Prominent but elegant, centered
+    let departureBoxWidth = 280;
+    let departureBoxX = x + (passWidth - departureBoxWidth) / 2;
+    
     p.fill(245, 245, 250);
-    p.rect(x + 30, y + 105, 280, 95, 4);
+    p.rect(departureBoxX, y + 105, departureBoxWidth, 95, 4);
     
     p.fill(15, 45, 120);
     p.textAlign(p.CENTER);
     p.textSize(13);
     p.textStyle(p.NORMAL);
-    p.text("DEPARTURE TIME", x + 170, y + 130);
+    p.text("DEPARTURE TIME", x + passWidth / 2, y + 130);
     
     p.textSize(52);
     p.textStyle(p.BOLD);
-    p.text(boardingPass.departure, x + 170, y + 178);
-    
-    // Gate - prominent on right
-    p.fill(100);
-    p.textAlign(p.CENTER);
-    p.textSize(11);
-    p.textStyle(p.NORMAL);
-    p.text("GATE", x + passWidth - 100, y + 115);
-    
-    p.fill(15, 45, 120);
-    p.textSize(48);
-    p.textStyle(p.BOLD);
-    p.text(boardingPass.gate, x + passWidth - 100, y + 165);
+    p.text(boardingPass.departure, x + passWidth / 2, y + 178);
     
     // Flight info
     p.fill(100);
@@ -123,6 +115,18 @@ registerSketch('sk3', function (p) {
     p.textSize(24);
     p.textStyle(p.BOLD);
     p.text(boardingPass.flight, x + 40, y + 250);
+    
+    // Gate - aligned with flight, right side
+    p.fill(100);
+    p.textAlign(p.RIGHT);
+    p.textSize(11);
+    p.textStyle(p.NORMAL);
+    p.text("GATE", x + passWidth - 40, y + 225);
+    
+    p.fill(15, 45, 120);
+    p.textSize(28);
+    p.textStyle(p.BOLD);
+    p.text(boardingPass.gate, x + passWidth - 40, y + 252);
     
     // Divider line
     p.stroke(220);
@@ -180,16 +184,16 @@ registerSketch('sk3', function (p) {
     
     // Barcode section with modern styling - darker and taller
     p.fill(235, 235, 240);
-    p.rect(x, y + passHeight - 120, passWidth, 120, 0, 0, 8, 8);
+    p.rect(x, y + passHeight - 140, passWidth, 140, 0, 0, 8, 8);
     
     p.fill(15, 45, 120);
     p.textAlign(p.CENTER);
     p.textSize(11);
     p.textStyle(p.BOLD);
-    p.text("BOARDING COUNTDOWN", x + passWidth / 2, y + passHeight - 100);
+    p.text("BOARDING COUNTDOWN", x + passWidth / 2, y + passHeight - 125);
     p.textSize(9);
     p.textStyle(p.NORMAL);
-    p.text("One bar appears every 5 minutes (starts 1 hour before departure)", x + passWidth / 2, y + passHeight - 87);
+    p.text("One bar appears every 5 minutes (starts 1 hour before departure)", x + passWidth / 2, y + passHeight - 112);
     
     // Calculate minutes until departure
     let currentTime = p.hour() * 60 + p.minute();
@@ -212,18 +216,18 @@ registerSketch('sk3', function (p) {
       barsToShow = Math.floor(minutesIntoCountdown / 5);
     }
     
-    // Draw barcode - positioned with padding
-    let barcodeSpacing = 30;
+    // Draw barcode - centered with proper spacing
+    let barcodeSpacing = 40;
     let totalBarcodeWidth = totalBars * barcodeSpacing;
     let barcodeX = x + (passWidth - totalBarcodeWidth) / 2;
-    let barcodeY = y + passHeight - 72;
-    let barcodeHeight = 38;
+    let barcodeY = y + passHeight - 90;
+    let barcodeHeight = 50;
     
     for (let i = 0; i < totalBars; i++) {
       if (i < barsToShow) {
         // Filled bars
         p.stroke(0);
-        p.strokeWeight(5);
+        p.strokeWeight(7);
         p.line(barcodeX + i * barcodeSpacing, barcodeY, barcodeX + i * barcodeSpacing, barcodeY + barcodeHeight);
       } else {
         // Empty bars - light gray
@@ -233,23 +237,23 @@ registerSketch('sk3', function (p) {
       }
     }
     
-    // Show time remaining - more prominent and elegant with padding
+    // Show time remaining - proper spacing below barcode
     p.textAlign(p.CENTER);
     if (minutesUntilDeparture > 0) {
       p.fill(15, 45, 120);
       p.textSize(16);
       p.textStyle(p.BOLD);
-      p.text(minutesUntilDeparture + " MINUTES", x + passWidth / 2, y + passHeight - 24);
+      p.text(minutesUntilDeparture + " MINUTES", x + passWidth / 2, y + passHeight - 22);
       
       p.fill(100);
       p.textSize(9);
       p.textStyle(p.NORMAL);
-      p.text("until departure • " + barsToShow + " of " + totalBars + " bars filled", x + passWidth / 2, y + passHeight - 10);
+      p.text("until departure", x + passWidth / 2, y + passHeight - 8);
     } else {
       p.fill(200, 50, 50);
       p.textSize(16);
       p.textStyle(p.BOLD);
-      p.text("DEPARTED", x + passWidth / 2, y + passHeight - 17);
+      p.text("DEPARTED", x + passWidth / 2, y + passHeight - 15);
     }
   };
   
