@@ -1,8 +1,7 @@
 // Boarding pass visualization
 registerSketch('sk3', function (p) {
   let boardingPass;
-  let departureTime; // in minutes from midnight
-  let boardingStartTime; // boarding starts 45 minutes before departure
+  let boardingTime; // in minutes from midnight
   let hourInput, minuteInput;
   
   p.setup = function () {
@@ -18,11 +17,11 @@ registerSketch('sk3', function (p) {
       barcode: "1234567890123"
     };
     
-    // Create input controls for departure time - positioned beside boarding pass
+    // Create input controls for boarding time - positioned beside boarding pass
     let controlX = 40;
     let controlY = 200;
     
-    p.createDiv('Set Departure Time:').position(controlX, controlY).style('color', '#333').style('font-size', '14px');
+    p.createDiv('Set Boarding Time:').position(controlX, controlY).style('color', '#333').style('font-size', '14px');
     
     hourInput = p.createInput('14').position(controlX, controlY + 30).size(40, 25);
     hourInput.attribute('type', 'number');
@@ -48,8 +47,7 @@ registerSketch('sk3', function (p) {
     boardingPass.departure = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
     
     // Calculate in minutes from midnight
-    departureTime = hours * 60 + minutes;
-    boardingStartTime = departureTime - 45; // 45 minutes before
+    boardingTime = hours * 60 + minutes;
   }
   
   p.draw = function () {
@@ -98,7 +96,7 @@ registerSketch('sk3', function (p) {
     p.textAlign(p.CENTER);
     p.textSize(13);
     p.textStyle(p.NORMAL);
-    p.text("DEPARTURE TIME", x + passWidth / 2, y + 130);
+    p.text("BOARDING TIME", x + passWidth / 2, y + 130);
     
     p.textSize(52);
     p.textStyle(p.BOLD);
@@ -195,10 +193,11 @@ registerSketch('sk3', function (p) {
     p.textStyle(p.NORMAL);
     p.text("One bar appears every 5 minutes until boarding begins", x + passWidth / 2, y + passHeight - 112);
     
-    // Calculate minutes until boarding starts
-    let currentTime = p.hour() * 60 + p.minute();
-    let minutesUntilBoarding = boardingStartTime - currentTime;
-    let minutesUntilDeparture = departureTime - currentTime;
+    // Calculate minutes until boarding starts (using PST timezone)
+    let now = new Date();
+    let pstTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    let currentTime = pstTime.getHours() * 60 + pstTime.getMinutes();
+    let minutesUntilBoarding = boardingTime - currentTime;
     
     // Calculate number of bars to show
     // Countdown starts 60 minutes before boarding, one bar every 5 minutes
@@ -254,8 +253,8 @@ registerSketch('sk3', function (p) {
       p.textSize(9);
       p.textStyle(p.NORMAL);
       p.text("until boarding begins", x + passWidth / 2, y + passHeight - 8);
-    } else if (minutesUntilDeparture > 0) {
-      // NOW BOARDING - clean centered message without barcode
+    } else if (minutesUntilBoarding > -20) {
+      // NOW BOARDING - clean centered message without barcode (boarding window is 20 minutes)
       p.fill(46, 125, 50);
       p.textSize(32);
       p.textStyle(p.BOLD);
