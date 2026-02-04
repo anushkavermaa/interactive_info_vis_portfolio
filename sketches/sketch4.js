@@ -5,17 +5,23 @@ registerSketch('sk4', function (p) {
   let currentGroup = 0;
   
   p.setup = function () {
-    p.createCanvas(p.windowWidth, p.windowHeight);
+    let canvasSize = p.min(800, p.min(p.windowWidth, p.windowHeight));
+    let canvas = p.createCanvas(canvasSize, canvasSize);
+    canvas.style('display', 'block');
+    canvas.style('margin', 'auto');
   };
   
   p.draw = function () {
     p.background(240, 240, 245);
     
-    // Draw frame around entire visualization
-    p.stroke(15, 45, 120);
-    p.strokeWeight(3);
-    p.noFill();
-    p.rect(p.width / 2 - 300, 20, 600, p.height - 40, 10);
+    // Simple dark frame like a display board
+    p.fill(25, 30, 40);
+    p.noStroke();
+    p.rect(p.width / 2 - 310, 10, 620, p.height - 20, 5);
+    
+    // Inner display area with subtle blue-tinted background
+    p.fill(235, 240, 250);
+    p.rect(p.width / 2 - 300, 20, 600, p.height - 40, 3);
     
     // Center the plane with slight upward offset and scale
     p.push();
@@ -258,5 +264,8 @@ registerSketch('sk4', function (p) {
     }
   };
   
-  p.windowResized = function () { p.resizeCanvas(p.windowWidth, p.windowHeight); };
+  p.windowResized = function () { 
+    let canvasSize = p.min(800, p.min(p.windowWidth, p.windowHeight));
+    p.resizeCanvas(canvasSize, canvasSize); 
+  };
 });
