@@ -178,18 +178,18 @@ registerSketch('sk3', function (p) {
     p.textStyle(p.BOLD);
     p.text(boardingPass.date, x + passWidth - 120, y + 308);
     
-    // Barcode section with modern styling - BIGGER
-    p.fill(250, 250, 255);
-    p.rect(x, y + passHeight - 100, passWidth, 100, 0, 0, 8, 8);
+    // Barcode section with modern styling - darker and taller
+    p.fill(235, 235, 240);
+    p.rect(x, y + passHeight - 120, passWidth, 120, 0, 0, 8, 8);
     
-    p.fill(180);
+    p.fill(15, 45, 120);
     p.textAlign(p.CENTER);
     p.textSize(11);
     p.textStyle(p.BOLD);
-    p.text("BOARDING COUNTDOWN", x + passWidth / 2, y + passHeight - 80);
+    p.text("BOARDING COUNTDOWN", x + passWidth / 2, y + passHeight - 100);
     p.textSize(9);
     p.textStyle(p.NORMAL);
-    p.text("One bar appears every 5 minutes (starts 1 hour before departure)", x + passWidth / 2, y + passHeight - 66);
+    p.text("One bar appears every 5 minutes (starts 1 hour before departure)", x + passWidth / 2, y + passHeight - 87);
     
     // Calculate minutes until departure
     let currentTime = p.hour() * 60 + p.minute();
@@ -212,11 +212,11 @@ registerSketch('sk3', function (p) {
       barsToShow = Math.floor(minutesIntoCountdown / 5);
     }
     
-    // Draw barcode
+    // Draw barcode - positioned with padding
     let barcodeSpacing = 30;
     let totalBarcodeWidth = totalBars * barcodeSpacing;
     let barcodeX = x + (passWidth - totalBarcodeWidth) / 2;
-    let barcodeY = y + passHeight - 50;
+    let barcodeY = y + passHeight - 72;
     let barcodeHeight = 38;
     
     for (let i = 0; i < totalBars; i++) {
@@ -233,15 +233,23 @@ registerSketch('sk3', function (p) {
       }
     }
     
-    // Show time remaining
-    p.fill(15, 45, 120);
-    p.textSize(11);
-    p.textStyle(p.BOLD);
+    // Show time remaining - more prominent and elegant with padding
+    p.textAlign(p.CENTER);
     if (minutesUntilDeparture > 0) {
-      p.text(minutesUntilDeparture + " min until departure | " + barsToShow + "/" + totalBars + " bars", x + passWidth / 2, y + passHeight - 5);
+      p.fill(15, 45, 120);
+      p.textSize(16);
+      p.textStyle(p.BOLD);
+      p.text(minutesUntilDeparture + " MINUTES", x + passWidth / 2, y + passHeight - 24);
+      
+      p.fill(100);
+      p.textSize(9);
+      p.textStyle(p.NORMAL);
+      p.text("until departure • " + barsToShow + " of " + totalBars + " bars filled", x + passWidth / 2, y + passHeight - 10);
     } else {
       p.fill(200, 50, 50);
-      p.text("DEPARTED", x + passWidth / 2, y + passHeight - 5);
+      p.textSize(16);
+      p.textStyle(p.BOLD);
+      p.text("DEPARTED", x + passWidth / 2, y + passHeight - 17);
     }
   };
   
