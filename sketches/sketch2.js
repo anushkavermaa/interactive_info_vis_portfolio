@@ -19,8 +19,12 @@ registerSketch('sk2', function (p) {
     let elapsed = p.millis() - startTime;
     let progress = p.constrain(elapsed / duration, 0, 1);
     
-    // Darker gray rectangle
-    p.fill(160);
+    // Darker gray rectangle (green when bags arrive)
+    if (progress >= 1) {
+      p.fill(152, 251, 152); // Light green background when complete
+    } else {
+      p.fill(160); // Gray during countdown
+    }
     p.rect(rectLeft, 150, 500, 300);
 
     // Baggage-claim style conveyor belt (narrow)
