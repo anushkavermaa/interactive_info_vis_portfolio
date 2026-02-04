@@ -193,67 +193,79 @@ registerSketch('sk3', function (p) {
     p.text("BOARDING COUNTDOWN", x + passWidth / 2, y + passHeight - 125);
     p.textSize(9);
     p.textStyle(p.NORMAL);
-    p.text("One bar appears every 5 minutes (starts 1 hour before departure)", x + passWidth / 2, y + passHeight - 112);
+    p.text("One bar appears every 5 minutes until boarding begins", x + passWidth / 2, y + passHeight - 112);
     
-    // Calculate minutes until departure
+    // Calculate minutes until boarding starts
     let currentTime = p.hour() * 60 + p.minute();
+    let minutesUntilBoarding = boardingStartTime - currentTime;
     let minutesUntilDeparture = departureTime - currentTime;
     
     // Calculate number of bars to show
-    // Countdown starts 60 minutes before, one bar every 5 minutes
+    // Countdown starts 60 minutes before boarding, one bar every 5 minutes
     let totalBars = 12; // 60 minutes / 5 = 12 bars
     let barsToShow = 0;
     
-    if (minutesUntilDeparture > 60) {
-      // More than 1 hour before departure - no bars yet
+    if (minutesUntilBoarding > 60) {
+      // More than 1 hour before boarding - no bars yet
       barsToShow = 0;
-    } else if (minutesUntilDeparture <= 0) {
-      // At or past departure - all bars shown
+    } else if (minutesUntilBoarding <= 0) {
+      // Boarding has started - all bars shown
       barsToShow = totalBars;
     } else {
-      // Between 60 min and departure - calculate bars
-      let minutesIntoCountdown = 60 - minutesUntilDeparture;
+      // Between 60 min and boarding start - calculate bars
+      let minutesIntoCountdown = 60 - minutesUntilBoarding;
       barsToShow = Math.floor(minutesIntoCountdown / 5);
     }
     
-    // Draw barcode - centered with proper spacing
-    let barcodeSpacing = 40;
-    let totalBarcodeWidth = totalBars * barcodeSpacing;
-    let barcodeX = x + (passWidth - totalBarcodeWidth) / 2;
-    let barcodeY = y + passHeight - 90;
-    let barcodeHeight = 50;
-    
-    for (let i = 0; i < totalBars; i++) {
-      if (i < barsToShow) {
-        // Filled bars
-        p.stroke(0);
-        p.strokeWeight(7);
-        p.line(barcodeX + i * barcodeSpacing, barcodeY, barcodeX + i * barcodeSpacing, barcodeY + barcodeHeight);
-      } else {
-        // Empty bars - light gray
-        p.stroke(220);
-        p.strokeWeight(2);
-        p.line(barcodeX + i * barcodeSpacing, barcodeY, barcodeX + i * barcodeSpacing, barcodeY + barcodeHeight);
-      }
-    }
-    
-    // Show time remaining - proper spacing below barcode
+    // Show status message or barcode depending on boarding status
     p.textAlign(p.CENTER);
-    if (minutesUntilDeparture > 0) {
+    p.noStroke();
+    
+    if (minutesUntilBoarding > 0) {
+      // Draw barcode - centered with proper spacing
+      let barcodeSpacing = 40;
+      let totalBarcodeWidth = totalBars * barcodeSpacing;
+      let barcodeX = x + (passWidth - totalBarcodeWidth) / 2;
+      let barcodeY = y + passHeight - 90;
+      let barcodeHeight = 50;
+      
+      for (let i = 0; i < totalBars; i++) {
+        if (i < barsToShow) {
+          // Filled bars
+          p.stroke(0);
+          p.strokeWeight(7);
+          p.line(barcodeX + i * barcodeSpacing, barcodeY, barcodeX + i * barcodeSpacing, barcodeY + barcodeHeight);
+        } else {
+          // Empty bars - light gray
+          p.stroke(220);
+          p.strokeWeight(2);
+          p.line(barcodeX + i * barcodeSpacing, barcodeY, barcodeX + i * barcodeSpacing, barcodeY + barcodeHeight);
+        }
+      }
+      
+      // Show time remaining below barcode
+      p.noStroke();
       p.fill(15, 45, 120);
       p.textSize(16);
       p.textStyle(p.BOLD);
-      p.text(minutesUntilDeparture + " MINUTES", x + passWidth / 2, y + passHeight - 22);
+      p.text(minutesUntilBoarding + " MINUTES", x + passWidth / 2, y + passHeight - 22);
       
       p.fill(100);
       p.textSize(9);
       p.textStyle(p.NORMAL);
-      p.text("until departure", x + passWidth / 2, y + passHeight - 8);
-    } else {
-      p.fill(200, 50, 50);
-      p.textSize(16);
+      p.text("until boarding begins", x + passWidth / 2, y + passHeight - 8);
+    } else if (minutesUntilDeparture > 0) {
+      // NOW BOARDING - clean centered message without barcode
+      p.fill(46, 125, 50);
+      p.textSize(32);
       p.textStyle(p.BOLD);
-      p.text("DEPARTED", x + passWidth / 2, y + passHeight - 15);
+      p.text("NOW BOARDING", x + passWidth / 2, y + passHeight - 60);
+    } else {
+      // DEPARTED
+      p.fill(100);
+      p.textSize(24);
+      p.textStyle(p.BOLD);
+      p.text("DEPARTED", x + passWidth / 2, y + passHeight - 60);
     }
   };
   
