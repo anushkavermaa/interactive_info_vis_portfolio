@@ -191,7 +191,7 @@ registerSketch('sk3', function (p) {
     p.text("BOARDING COUNTDOWN", x + passWidth / 2, y + passHeight - 125);
     p.textSize(9);
     p.textStyle(p.NORMAL);
-    p.text("One bar appears every 5 minutes until boarding begins", x + passWidth / 2, y + passHeight - 112);
+    p.text("One bar appears every 5 minutes until boarding begins, starting 60 minutes prior", x + passWidth / 2, y + passHeight - 112);
     
     // Calculate minutes until boarding starts (using PST timezone)
     let now = new Date();

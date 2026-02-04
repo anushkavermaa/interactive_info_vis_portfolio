@@ -59,7 +59,9 @@
             <li><strong>Future work:</strong> This clock could be improved by incorporating more detailed animations, such as having
               the person icon 'dance' or do some kind of motion when they receive their bag, or adding sound effects to indicate when 
               bags are about to arrive. It could also be useful to add more status update texts, such as "Your bags have been transferred
-              off of the tarmac." This would help users understand the baggage claim process more clearly and alleviate impatience. </li>
+              off of the tarmac." This would help users understand the baggage claim process more clearly and alleviate impatience. A more
+              technical improvement would be to figure out how this clock would actually be implemented at the airport. Right now it starts at
+              30 seconds, but maybe having some location tracking feature on the actual bags would be more useful for people. </li>
           </ul>
           </p>
         </div>
@@ -87,19 +89,21 @@
       <div id="sketch-drawing-sk2" class="sketch-evolution">
         <!-- Project narrative template: replace the text below with your own narrative -->
         <div class="sketch-narrative" aria-labelledby="sk2-narrative-title">
-          <h3 id="sk2-narrative-title">Sketch narrative (replace this and add to the other two sketches!)</h3>
-          <p class="small-note">Replace this entire block with your own text when submitting.</p>
+          <h3 id="sk2-narrative-title">Sketch narrative</h3>
+          <p class="small-note"></p>
           <p>
-            Context: Briefly describe the situation or user need this sketch addresses. For example,
-            "This sketch visualizes sunrise/sunset behavior for a simple teaching demo on coordinate
-            systems and interaction." Keep it short — 1–2 sentences.
           <ul>
-            <li><strong>Context:</strong> Who is this for? In what context will it be used? (e.g., mountain, pomodoro,
-              running, cooking, breathing?)</li>
-            <li><strong>Design decisions:</strong> Explain 2–3 key choices you made (layout, color, interaction) and why
-              you made them. Use plain language and reference any constraints (time, accessibility,
-              or target device).</li>
-            <li><strong>Future work:</strong> 1–2 ideas for improvements or extensions.</li>
+            <li><strong>Context:</strong> This clock is meant to be used by people who are at the airport, waiting to board their flight.
+              Waiting can be a long, annoying process, so the goal of this visualization is to add more fun to the experience.</li>
+            <li><strong>Design decisions:</strong> Since the purpose of the clock is to countdown time until boarding, I decided to center 
+              the boarding time prominently on the boarding pass, in the middle, for easy visibility. Other information about the flight (flight number, 
+              gate, from/to) is placed around it for context. The visualization starts an hour before boarding, and each bar represents 5 minutes.
+              I included text about the countdown, including what each bar represents and when the countdown starts, for users to understand it better.
+              I also made it interactive by allowing users to set their own boarding time so that they can test out the prototype and see
+              how the bars appear.</li>
+            <li><strong>Future work:</strong> One possibility for future work is to add more elements that encode time, rather than just the bars that
+              each represent 5 minutes. Having a visual to depict seconds could make the countdown more precise and engaging. Another improvement is to 
+              make the barcode more prominent, possibly by increasing its size, adding animation effects, or moving it to the middle of the boarding pass.</li>
           </ul>
           </p>
         </div>
