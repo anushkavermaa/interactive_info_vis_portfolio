@@ -24,17 +24,23 @@ registerSketch('sk4', function (p) {
     
     p.pop();
     
-    // Display boarding group info
-    p.fill(0);
-    p.textAlign(p.CENTER);
-    p.textSize(20);
+    // Display boarding group info - airport style
+    // Dark background banner
+    p.fill(15, 45, 120);
+    p.noStroke();
+    p.rect(p.width / 2 - 250, 20, 500, 60, 5);
+    
+    // White text on dark background
+    p.fill(255);
+    p.textAlign(p.CENTER, p.CENTER);
+    p.textSize(28);
+    p.textStyle(p.BOLD);
     if (currentGroup < boardingGroups.length) {
-      p.text('Now Boarding: ' + boardingGroups[currentGroup], p.width / 2, 100);
+      p.text('NOW BOARDING: ' + boardingGroups[currentGroup].toUpperCase(), p.width / 2, 50);
     } else {
-      p.text('Boarding Complete', p.width / 2, 100);
+      p.text('BOARDING COMPLETE', p.width / 2, 50);
     }
-    p.textSize(14);
-    p.text(Math.floor(boardingProgress * 100) + '% Full', p.width / 2, 130);
+    p.textStyle(p.NORMAL);
   };
   
   function drawPlaneOutline() {
