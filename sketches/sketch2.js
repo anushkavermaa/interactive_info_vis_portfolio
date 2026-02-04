@@ -13,7 +13,7 @@ registerSketch('sk2', function (p) {
   };
   
   p.draw = function () {
-    p.background(220);
+    //p.background(220);
     
     // Calculate elapsed time and progress (0 to 1)
     let elapsed = p.millis() - startTime;
@@ -113,12 +113,10 @@ registerSketch('sk2', function (p) {
     let mins = Math.floor(secs / 60);
     let s = secs % 60;
     let timeStr = (mins < 10 ? '0' + mins : '' + mins) + ':' + (s < 10 ? '0' + s : '' + s);
-    p.textSize(18);
+    p.textSize(24);
     // place countdown at bottom-center of the dark rectangle
     p.textAlign(p.CENTER, p.BOTTOM);
-    // rectangle top=150, height=300 -> bottom = 150+300 = 450
-    // move timer a little higher
-    p.text(timeStr, rectLeft + 250, 430);
+    p.text(timeStr, rectLeft + 250, 415);
   };
   p.windowResized = function () { p.resizeCanvas(p.windowWidth, p.windowHeight); };
 });
