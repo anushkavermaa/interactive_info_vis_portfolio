@@ -11,9 +11,16 @@ registerSketch('sk4', function (p) {
   p.draw = function () {
     p.background(240, 240, 245);
     
-    // Center the plane
+    // Draw frame around entire visualization
+    p.stroke(15, 45, 120);
+    p.strokeWeight(3);
+    p.noFill();
+    p.rect(p.width / 2 - 300, 20, 600, p.height - 40, 10);
+    
+    // Center the plane with slight upward offset and scale
     p.push();
-    p.translate(p.width / 2, p.height / 2);
+    p.translate(p.width / 2, p.height / 2 + 10);
+    p.scale(0.75); // Scale down for better proportion
     p.rotate(-p.PI / 4); // Diagonal orientation
     
     // Draw plane outline
@@ -25,21 +32,30 @@ registerSketch('sk4', function (p) {
     p.pop();
     
     // Display boarding group info - airport style
-    // Dark background banner
+    // Dark background banner - larger and more prominent
     p.fill(15, 45, 120);
     p.noStroke();
-    p.rect(p.width / 2 - 250, 20, 500, 60, 5);
+    p.rect(p.width / 2 - 225, 40, 450, 55, 8);
     
     // White text on dark background
     p.fill(255);
     p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(28);
+    p.textSize(24);
     p.textStyle(p.BOLD);
     if (currentGroup < boardingGroups.length) {
-      p.text('NOW BOARDING: ' + boardingGroups[currentGroup].toUpperCase(), p.width / 2, 50);
+      p.text('NOW BOARDING: ' + boardingGroups[currentGroup].toUpperCase(), p.width / 2, 67.5);
     } else {
-      p.text('BOARDING COMPLETE', p.width / 2, 50);
+      p.text('BOARDING COMPLETE', p.width / 2, 67.5);
     }
+    p.textStyle(p.NORMAL);
+    
+    // Boarding progress percentage at bottom - larger and more prominent
+    p.fill(15, 45, 120);
+    p.rect(p.width / 2 - 225, p.height - 95, 450, 55, 8);
+    p.fill(255);
+    p.textSize(24);
+    p.textStyle(p.BOLD);
+    p.text(Math.floor(boardingProgress * 100) + '% COMPLETE', p.width / 2, p.height - 67.5);
     p.textStyle(p.NORMAL);
   };
   
@@ -136,7 +152,7 @@ registerSketch('sk4', function (p) {
     
     for (let y = 218; y >= fillY; y -= 2) {
       let amt = p.map(y, 218, -280, 0, 1);
-      let c = p.lerpColor(p.color(100, 180, 255, 150), p.color(15, 45, 120, 180), amt);
+      let c = p.lerpColor(p.color(100, 150, 220, 180), p.color(15, 45, 120, 200), amt);
       p.fill(c);
       
       // Calculate fuselage width
