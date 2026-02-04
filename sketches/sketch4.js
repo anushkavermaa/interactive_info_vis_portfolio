@@ -14,6 +14,7 @@ registerSketch('sk4', function (p) {
     // Center the plane
     p.push();
     p.translate(p.width / 2, p.height / 2);
+    p.rotate(-p.PI / 4); // Diagonal orientation
     
     // Draw plane outline
     drawPlaneOutline();
@@ -37,94 +38,109 @@ registerSketch('sk4', function (p) {
   };
   
   function drawPlaneOutline() {
-    // Plane body (fuselage)
+    // Aerial/top-down view of plane
     p.stroke(15, 45, 120);
     p.strokeWeight(4);
     p.noFill();
     
-    // Main fuselage - rounded rectangle
+    // Main fuselage (body)
     p.beginShape();
-    // Nose (front, rounded)
-    p.vertex(-250, 0);
-    p.bezierVertex(-280, 0, -290, -15, -290, -25);
-    p.bezierVertex(-290, -35, -280, -50, -250, -50);
+    // Pointed nose
+    p.vertex(0, -280);
     
-    // Top of fuselage
-    p.vertex(200, -50);
+    // Right side - gradual widening
+    p.bezierVertex(10, -270, 20, -250, 25, -200);
+    p.vertex(25, 150);
     
-    // Tail section
-    p.bezierVertex(220, -50, 240, -55, 250, -65);
-    p.vertex(250, -65);
+    // Right tail taper
+    p.bezierVertex(25, 170, 20, 185, 12, 195);
+    
+    // Connect to center tail
+    p.bezierVertex(8, 198, 4, 200, 0, 200);
+    
+    // Left tail taper
+    p.bezierVertex(-4, 200, -8, 198, -12, 195);
+    p.bezierVertex(-20, 185, -25, 170, -25, 150);
+    
+    // Left side
+    p.vertex(-25, -200);
+    p.bezierVertex(-20, -250, -10, -270, 0, -280);
+    p.endShape(p.CLOSE);
+    
+    // Right wing
+    p.beginShape();
+    p.vertex(25, -60);
+    p.bezierVertex(35, -65, 50, -70, 80, -75);
+    p.bezierVertex(100, -78, 120, -80, 140, -80);
+    p.bezierVertex(145, -78, 148, -75, 148, -70);
+    p.bezierVertex(140, -68, 120, -65, 100, -60);
+    p.bezierVertex(70, -50, 45, -40, 25, -35);
+    p.endShape(p.CLOSE);
+    
+    // Left wing
+    p.beginShape();
+    p.vertex(-25, -60);
+    p.bezierVertex(-35, -65, -50, -70, -80, -75);
+    p.bezierVertex(-100, -78, -120, -80, -140, -80);
+    p.bezierVertex(-145, -78, -148, -75, -148, -70);
+    p.bezierVertex(-140, -68, -120, -65, -100, -60);
+    p.bezierVertex(-70, -50, -45, -40, -25, -35);
+    p.endShape(p.CLOSE);
+    
+    // Right horizontal stabilizer
+    p.beginShape();
+    p.vertex(8, 195);
+    p.bezierVertex(18, 197, 32, 200, 48, 202);
+    p.bezierVertex(56, 203, 63, 204, 68, 204);
+    p.bezierVertex(70, 206, 70, 209, 68, 211);
+    p.bezierVertex(63, 211, 56, 212, 48, 213);
+    p.bezierVertex(32, 215, 18, 217, 8, 218);
+    p.endShape(p.CLOSE);
+    
+    // Left horizontal stabilizer
+    p.beginShape();
+    p.vertex(-8, 195);
+    p.bezierVertex(-18, 197, -32, 200, -48, 202);
+    p.bezierVertex(-56, 203, -63, 204, -68, 204);
+    p.bezierVertex(-70, 206, -70, 209, -68, 211);
+    p.bezierVertex(-63, 211, -56, 212, -48, 213);
+    p.bezierVertex(-32, 215, -18, 217, -8, 218);
+    p.endShape(p.CLOSE);
     
     // Vertical stabilizer (tail fin)
-    p.vertex(270, -80);
-    p.vertex(250, -80);
-    p.vertex(250, -65);
-    
-    // Back to bottom of tail
-    p.vertex(250, -65);
-    p.bezierVertex(240, -60, 230, -58, 220, -58);
-    
-    // Bottom of fuselage back section
-    p.vertex(200, -58);
-    p.vertex(200, 8);
-    
-    // Bottom of tail
-    p.bezierVertex(230, 8, 240, 10, 250, 15);
-    p.vertex(250, 15);
-    p.vertex(270, 30);
-    p.vertex(250, 30);
-    p.vertex(250, 15);
-    p.bezierVertex(240, 5, 220, 0, 200, 0);
-    
-    // Bottom of main fuselage
-    p.vertex(-250, 0);
-    
-    p.endShape(p.CLOSE);
-    
-    // Wings
     p.beginShape();
-    // Left wing
-    p.vertex(-50, -50);
-    p.vertex(-100, -120);
-    p.vertex(-80, -125);
-    p.vertex(-30, -58);
+    p.vertex(-5, 198);
+    p.vertex(-5, 228);
+    p.bezierVertex(-5, 234, -3, 238, 0, 238);
+    p.bezierVertex(3, 238, 5, 234, 5, 228);
+    p.vertex(5, 198);
     p.endShape(p.CLOSE);
     
-    p.beginShape();
-    // Right wing
-    p.vertex(-50, 8);
-    p.vertex(-100, 70);
-    p.vertex(-80, 75);
-    p.vertex(-30, 16);
-    p.endShape(p.CLOSE);
+    // Cockpit window
+    p.strokeWeight(2);
+    p.ellipse(0, -250, 15, 20);
   }
   
   function drawBoardingProgress() {
     // Create gradient fill based on boarding progress
     p.noStroke();
     
-    // Calculate how much of the plane to fill
-    let fillHeight = -50 + (58 * boardingProgress);
+    // Fill from tail to nose
+    let fillY = 200 - (480 * boardingProgress);
     
-    // Draw gradient from bottom to top as boarding progresses
-    for (let y = 8; y >= fillHeight; y -= 2) {
-      let amt = p.map(y, 8, -50, 0, 1);
+    for (let y = 200; y >= fillY; y -= 2) {
+      let amt = p.map(y, 200, -280, 0, 1);
       let c = p.lerpColor(p.color(100, 180, 255, 150), p.color(15, 45, 120, 180), amt);
       p.fill(c);
       
-      // Draw horizontal slice of the plane body
-      if (y > -50) {
-        let leftX = -250;
-        let rightX = 200;
-        
-        // Adjust for nose curve
-        if (leftX < -250) {
-          leftX = -250;
-        }
-        
-        p.rect(leftX, y, rightX - leftX, 2);
+      let w = 25;
+      if (y < -200) {
+        w = p.map(y, -280, -200, 0, 25);
+      } else if (y > 150) {
+        w = p.map(y, 150, 200, 25, 0);
       }
+      
+      p.rect(-w, y, w * 2, 2);
     }
   }
   
