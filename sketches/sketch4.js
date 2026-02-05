@@ -3,25 +3,50 @@ registerSketch('sk4', function (p) {
   let boardingProgress = 0; // 0 to 1 (0% to 100%)
   let boardingGroups = ['Group 1', 'Group 2', 'Group 3', 'Group 4', 'Group 5'];
   let currentGroup = 0;
+  let groupStartTime = 0;
+  let timePerGroup = 7 * 60 * 1000; // 7 minutes in milliseconds
   
   p.setup = function () {
     let canvasSize = p.min(800, p.min(p.windowWidth, p.windowHeight));
     let canvas = p.createCanvas(canvasSize, canvasSize);
     canvas.style('display', 'block');
     canvas.style('margin', 'auto');
+    groupStartTime = p.millis();
   };
   
   p.draw = function () {
     p.background(240, 240, 245);
     
+    // Auto-advance boarding groups
+    let timeRemaining = 0;
+    if (currentGroup < boardingGroups.length) {
+      let elapsedTime = p.millis() - groupStartTime;
+      
+      // Smooth progress within current group
+      let groupProgress = p.constrain(elapsedTime / timePerGroup, 0, 1);
+      boardingProgress = (currentGroup + groupProgress) / boardingGroups.length;
+      
+      // Calculate time remaining
+      timeRemaining = p.max(0, timePerGroup - elapsedTime);
+      
+      // Advance to next group when time is up
+      if (elapsedTime >= timePerGroup) {
+        currentGroup++;
+        groupStartTime = p.millis();
+      }
+    } else {
+      // Ensure progress is complete
+      boardingProgress = 1;
+    }
+    
     // Simple dark frame like a display board
     p.fill(25, 30, 40);
     p.noStroke();
-    p.rect(p.width / 2 - 310, 10, 620, p.height - 20, 5);
+    p.rect(p.width / 2 - 390, 10, 780, p.height - 20, 5);
     
     // Inner display area with subtle blue-tinted background
     p.fill(235, 240, 250);
-    p.rect(p.width / 2 - 300, 20, 600, p.height - 40, 3);
+    p.rect(p.width / 2 - 380, 20, 760, p.height - 40, 3);
     
     // Center the plane with slight upward offset and scale
     p.push();
@@ -41,7 +66,7 @@ registerSketch('sk4', function (p) {
     // Dark background banner - larger and more prominent
     p.fill(15, 45, 120);
     p.noStroke();
-    p.rect(p.width / 2 - 225, 40, 450, 55, 8);
+    p.rect(p.width / 2 - 350, 40, 700, 55, 8);
     
     // White text on dark background
     p.fill(255);
@@ -55,9 +80,23 @@ registerSketch('sk4', function (p) {
     }
     p.textStyle(p.NORMAL);
     
+    // Time remaining indicator below boarding group
+    if (currentGroup < boardingGroups.length) {
+      p.fill(220, 240, 255);
+      p.rect(p.width / 2 - 150, 105, 300, 35, 5);
+      p.fill(15, 45, 120);
+      p.textSize(18);
+      p.textStyle(p.BOLD);
+      let minutes = p.floor(timeRemaining / 60000);
+      let seconds = p.floor((timeRemaining % 60000) / 1000);
+      let timeStr = p.nf(minutes, 1) + ':' + p.nf(seconds, 2);
+      p.text('TIME REMAINING: ' + timeStr, p.width / 2, 122.5);
+      p.textStyle(p.NORMAL);
+    }
+    
     // Boarding progress percentage at bottom - larger and more prominent
     p.fill(15, 45, 120);
-    p.rect(p.width / 2 - 225, p.height - 95, 450, 55, 8);
+    p.rect(p.width / 2 - 350, p.height - 95, 700, 55, 8);
     p.fill(255);
     p.textSize(24);
     p.textStyle(p.BOLD);
@@ -256,11 +295,14 @@ registerSketch('sk4', function (p) {
     }
   }
   
-  // Click to advance boarding groups
+  // Click to skip to next boarding group
   p.mousePressed = function () {
     if (currentGroup < boardingGroups.length) {
       currentGroup++;
-      boardingProgress = currentGroup / boardingGroups.length;
+      groupStartTime = p.millis(); // Reset timer for new group
+      if (currentGroup >= boardingGroups.length) {
+        boardingProgress = 1;
+      }
     }
   };
   
