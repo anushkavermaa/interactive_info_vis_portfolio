@@ -55,3 +55,10 @@ canvas {
   height: auto;
   display: block;
 }
+
+.sketch-evolution img {
+  max-width: 420px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
