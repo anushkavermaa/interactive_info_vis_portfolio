@@ -131,19 +131,21 @@
       <div id="sketch-drawing-sk2" class="sketch-evolution">
         <!-- Project narrative template: replace the text below with your own narrative -->
         <div class="sketch-narrative" aria-labelledby="sk2-narrative-title">
-          <h3 id="sk2-narrative-title">Sketch narrative (replace this and add to the other two sketches!)</h3>
-          <p class="small-note">Replace this entire block with your own text when submitting.</p>
+          <h3 id="sk2-narrative-title">Sketch narrative</h3>
+          <p class="small-note"></p>
           <p>
-            Context: Briefly describe the situation or user need this sketch addresses. For example,
-            "This sketch visualizes sunrise/sunset behavior for a simple teaching demo on coordinate
-            systems and interaction." Keep it short — 1–2 sentences.
           <ul>
-            <li><strong>Context:</strong> Who is this for? In what context will it be used? (e.g., mountain, pomodoro,
-              running, cooking, breathing?)</li>
-            <li><strong>Design decisions:</strong> Explain 2–3 key choices you made (layout, color, interaction) and why
-              you made them. Use plain language and reference any constraints (time, accessibility,
-              or target device).</li>
-            <li><strong>Future work:</strong> 1–2 ideas for improvements or extensions.</li>
+            <li><strong>Context:</strong> This clock is for people who are waiting for their boarding group to be called at the airport. It counts
+            down the time until their group is called in a quantitative and visual (gradient) manner.</li>
+            <li><strong>Design decisions:</strong> I decided to visualize the plane being filled up by the gradient because it is an accurate description
+            of the boarding process– the more groups that are called, the more filled the plane is. Each group is given 7 minutes to board, and the 
+            time remaining is displayed below the boarding group name to keep users informed. I also decided to include an interactive element, where users 
+            can click their mouse to skip to the next boarding group. The bottom of the visualization also displays the overall boarding progress as a percentage,  
+            so those waiting can easily see how much of the boarding process is complete.</li>
+            <li><strong>Future work:</strong> This clock could be improved by finding a way to make the gradient that fills the plane be more accurate, and actually
+            fill the complete outline. I was trying to figure out how to do this but ran into some challenges with the shape complexity, and also the fact that I am new 
+            to p5.js and interactive visualization. Another, more technical, improvement could be related to how this clock would actually be implemented. Rather than 
+            defaulting to 7 minutes for each boarding group, it could dynamically adjust based on real-time data or user input to provide a more accurate countdown.</li>
           </ul>
           </p>
         </div>
