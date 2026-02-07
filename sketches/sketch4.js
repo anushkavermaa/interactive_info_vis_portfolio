@@ -1,5 +1,6 @@
 // Instance-mode sketch for tab 4
 registerSketch('sk4', function (p) {
+  const MAX_SIZE = 600;
   let boardingProgress = 0; // 0 to 1 (0% to 100%)
   let boardingGroups = ['Group 1', 'Group 2', 'Group 3', 'Group 4', 'Group 5'];
   let currentGroup = 0;
@@ -7,7 +8,7 @@ registerSketch('sk4', function (p) {
   let timePerGroup = 7 * 60 * 1000; // 7 minutes in milliseconds
   
   p.setup = function () {
-    let canvasSize = p.min(800, p.min(p.windowWidth, p.windowHeight));
+    let canvasSize = p.min(MAX_SIZE, p.min(p.windowWidth, p.windowHeight));
     let canvas = p.createCanvas(canvasSize, canvasSize);
     canvas.style('display', 'block');
     canvas.style('margin', 'auto');
@@ -16,6 +17,10 @@ registerSketch('sk4', function (p) {
   
   p.draw = function () {
     p.background(240, 240, 245);
+
+    let uiScale = p.width / 800;
+    let frameMargin = 10 * uiScale;
+    let innerMargin = 20 * uiScale;
     
     // Auto-advance boarding groups
     let timeRemaining = 0;
@@ -42,16 +47,16 @@ registerSketch('sk4', function (p) {
     // Simple dark frame like a display board
     p.fill(25, 30, 40);
     p.noStroke();
-    p.rect(p.width / 2 - 390, 10, 780, p.height - 20, 5);
+    p.rect(frameMargin, frameMargin, p.width - frameMargin * 2, p.height - frameMargin * 2, 5 * uiScale);
     
     // Inner display area with subtle blue-tinted background
     p.fill(235, 240, 250);
-    p.rect(p.width / 2 - 380, 20, 760, p.height - 40, 3);
+    p.rect(frameMargin + innerMargin, frameMargin + innerMargin, p.width - (frameMargin + innerMargin) * 2, p.height - (frameMargin + innerMargin) * 2, 3 * uiScale);
     
     // Center the plane with slight upward offset and scale
     p.push();
-    p.translate(p.width / 2, p.height / 2 + 10);
-    p.scale(0.75); // Scale down for better proportion
+    p.translate(p.width / 2, p.height / 2);
+    p.scale(0.97 * uiScale); // Scale down for better proportion
     p.rotate(-p.PI / 4); // Diagonal orientation
     
     // Draw plane outline
@@ -66,41 +71,50 @@ registerSketch('sk4', function (p) {
     // Dark background banner - larger and more prominent
     p.fill(15, 45, 120);
     p.noStroke();
-    p.rect(p.width / 2 - 350, 40, 700, 55, 8);
+    let bannerWidth = 700 * uiScale;
+    let bannerHeight = 55 * uiScale;
+    let bannerX = (p.width - bannerWidth) / 2;
+    let bannerY = 40 * uiScale;
+    p.rect(bannerX, bannerY, bannerWidth, bannerHeight, 8 * uiScale);
     
     // White text on dark background
     p.fill(255);
     p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(24);
+    p.textSize(24 * uiScale);
     p.textStyle(p.BOLD);
     if (currentGroup < boardingGroups.length) {
-      p.text('NOW BOARDING: ' + boardingGroups[currentGroup].toUpperCase(), p.width / 2, 67.5);
+      p.text('NOW BOARDING: ' + boardingGroups[currentGroup].toUpperCase(), p.width / 2, bannerY + bannerHeight / 2);
     } else {
-      p.text('BOARDING COMPLETE', p.width / 2, 67.5);
+      p.text('BOARDING COMPLETE', p.width / 2, bannerY + bannerHeight / 2);
     }
     p.textStyle(p.NORMAL);
     
     // Time remaining indicator below boarding group
     if (currentGroup < boardingGroups.length) {
       p.fill(220, 240, 255);
-      p.rect(p.width / 2 - 150, 105, 300, 35, 5);
+      let timeBoxWidth = 300 * uiScale;
+      let timeBoxHeight = 35 * uiScale;
+      let timeBoxX = (p.width - timeBoxWidth) / 2;
+      let timeBoxY = 105 * uiScale;
+      p.rect(timeBoxX, timeBoxY, timeBoxWidth, timeBoxHeight, 5 * uiScale);
       p.fill(15, 45, 120);
-      p.textSize(18);
+      p.textSize(18 * uiScale);
       p.textStyle(p.BOLD);
       let minutes = p.floor(timeRemaining / 60000);
       let seconds = p.floor((timeRemaining % 60000) / 1000);
       let timeStr = p.nf(minutes, 1) + ':' + p.nf(seconds, 2);
-      p.text('TIME REMAINING: ' + timeStr, p.width / 2, 122.5);
+      p.text('TIME REMAINING: ' + timeStr, p.width / 2, timeBoxY + timeBoxHeight / 2);
       p.textStyle(p.NORMAL);
     }
     
     // Boarding progress percentage at bottom - larger and more prominent
     p.fill(15, 45, 120);
-    p.rect(p.width / 2 - 350, p.height - 95, 700, 55, 8);
+    let bottomBannerY = p.height - 95 * uiScale;
+    p.rect(bannerX, bottomBannerY, bannerWidth, bannerHeight, 8 * uiScale);
     p.fill(255);
-    p.textSize(24);
+    p.textSize(24 * uiScale);
     p.textStyle(p.BOLD);
-    p.text(Math.floor(boardingProgress * 100) + '% COMPLETE', p.width / 2, p.height - 67.5);
+    p.text(Math.floor(boardingProgress * 100) + '% COMPLETE', p.width / 2, bottomBannerY + bannerHeight / 2);
     p.textStyle(p.NORMAL);
   };
   
@@ -307,7 +321,7 @@ registerSketch('sk4', function (p) {
   };
   
   p.windowResized = function () { 
-    let canvasSize = p.min(800, p.min(p.windowWidth, p.windowHeight));
+    let canvasSize = p.min(MAX_SIZE, p.min(p.windowWidth, p.windowHeight));
     p.resizeCanvas(canvasSize, canvasSize); 
   };
 });
