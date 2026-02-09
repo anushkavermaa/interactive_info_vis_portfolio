@@ -57,7 +57,7 @@ registerSketch('sk5', function (p) {
     p.rect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
     const margin = 120;
-    const headerH = 200;
+    const headerH = 320;
     const plotSize = 500;
     const availableH = CANVAS_SIZE - margin - headerH;
     const left = (CANVAS_SIZE - plotSize) / 2;
@@ -68,18 +68,27 @@ registerSketch('sk5', function (p) {
     // Title and subtitle
     p.fill(20);
     p.noStroke();
-    p.textAlign(p.CENTER, p.TOP);
-    p.textSize(34);
+    const titleX = 80;
+    const titleY = 54;
+    const titleLineH = 56;
+
+    p.textAlign(p.LEFT, p.TOP);
+    p.textFont("Georgia");
+    p.textStyle(p.BOLD);
+    p.textSize(50);
     p.text(
-      "Can We Predict the Outcome of a College Football Game?",
-      CANVAS_SIZE / 2,
-      36
+      "Can We Predict the Outcome\nof a College Football Game?",
+      titleX,
+      titleY
     );
-    p.textSize(18);
+    p.textAlign(p.LEFT, p.TOP);
+    p.textFont("Helvetica");
+    p.textStyle(p.NORMAL);
+    p.textSize(26);
     p.text(
       "Exploring the Relationship Between Total Yardage and the Winner of the Game",
-      CANVAS_SIZE / 2,
-      88
+      titleX,
+      titleY + titleLineH * 2 + 24
     );
 
     const zeroX = p.map(0, X_DOMAIN[0], X_DOMAIN[1], left, right);
