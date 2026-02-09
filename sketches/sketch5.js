@@ -49,6 +49,14 @@ registerSketch('sk5', function (p) {
     const top = margin;
     const bottom = p.height - margin;
 
+    const cx = (left + right) / 2;
+    const cy = (top + bottom) / 2;
+
+    p.push();
+    p.translate(cx, cy);
+    p.scale(0.45);
+    p.translate(-cx, -cy);
+
     // Axes
     p.stroke(0);
     p.line(left, bottom, right, bottom);
@@ -96,6 +104,8 @@ registerSketch('sk5', function (p) {
 
       p.circle(x, y, 5);
     }
+
+    p.pop();
   };
 
   p.windowResized = function () {
