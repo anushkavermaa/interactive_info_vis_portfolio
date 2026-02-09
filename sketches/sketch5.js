@@ -91,8 +91,8 @@ registerSketch('sk5', function (p) {
       if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
 
       // Color by win/loss
-      if (pointDiff > 0) p.fill(70, 140, 255, 120);
-      else p.fill(230, 80, 80, 120);
+      if (pointDiff > 0) p.fill(212, 175, 55, 160);
+      else p.fill(106, 13, 173, 160);
 
       p.circle(x, y, 5);
     }
