@@ -1,6 +1,7 @@
 // Example 2
 registerSketch('sk5', function (p) {
   let table;
+  const CANVAS_SIZE = 1080;
 
   const COL = {
     score_home: "score_home",
@@ -37,42 +38,49 @@ registerSketch('sk5', function (p) {
   };
 
   p.setup = function () {
-    p.createCanvas(p.windowWidth, p.windowHeight);
+    p.createCanvas(CANVAS_SIZE, CANVAS_SIZE);
   };
 
   p.draw = function () {
-    p.background(244, 246, 249);
+    p.background(255);
 
-    const margin = 100;
-    const left = margin;
-    const right = p.width - margin;
-    const top = margin;
-    const bottom = p.height - margin;
+    const scale = 0.5;
+    const offsetX = (CANVAS_SIZE - CANVAS_SIZE * scale) / 2;
+    const offsetY = 80;
+
+    p.push();
+    p.translate(offsetX, offsetY);
+    p.scale(scale);
+
+    p.noStroke();
+    p.fill(244, 246, 249);
+    p.rect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+    const margin = 120;
+    const headerH = 200;
+    const plotSize = 500;
+    const availableH = CANVAS_SIZE - margin - headerH;
+    const left = (CANVAS_SIZE - plotSize) / 2;
+    const top = headerH + (availableH - plotSize) / 2;
+    const right = left + plotSize;
+    const bottom = top + plotSize;
 
     // Title and subtitle
     p.fill(20);
     p.noStroke();
     p.textAlign(p.CENTER, p.TOP);
-    p.textSize(36);
+    p.textSize(34);
     p.text(
       "Can We Predict the Outcome of a College Football Game?",
-      p.width / 2,
-      30
+      CANVAS_SIZE / 2,
+      36
     );
-    p.textSize(20);
+    p.textSize(18);
     p.text(
       "Exploring the Relationship Between Total Yardage and the Winner of the Game",
-      p.width / 2,
-      80
+      CANVAS_SIZE / 2,
+      88
     );
-
-    const cx = (left + right) / 2;
-    const cy = (top + bottom) / 2;
-
-    p.push();
-    p.translate(cx, cy);
-    p.scale(0.45);
-    p.translate(-cx, -cy);
 
     const zeroX = p.map(0, X_DOMAIN[0], X_DOMAIN[1], left, right);
     const zeroY = p.map(0, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
@@ -138,6 +146,6 @@ registerSketch('sk5', function (p) {
   };
 
   p.windowResized = function () {
-    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    p.resizeCanvas(CANVAS_SIZE, CANVAS_SIZE);
   };
 });
