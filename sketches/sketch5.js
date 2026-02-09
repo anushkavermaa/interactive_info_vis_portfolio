@@ -41,13 +41,30 @@ registerSketch('sk5', function (p) {
   };
 
   p.draw = function () {
-    p.background(255);
+    p.background(244, 246, 249);
 
     const margin = 100;
     const left = margin;
     const right = p.width - margin;
     const top = margin;
     const bottom = p.height - margin;
+
+    // Title and subtitle
+    p.fill(20);
+    p.noStroke();
+    p.textAlign(p.CENTER, p.TOP);
+    p.textSize(36);
+    p.text(
+      "Can We Predict the Outcome of a College Football Game?",
+      p.width / 2,
+      30
+    );
+    p.textSize(20);
+    p.text(
+      "Exploring the Relationship Between Total Yardage and the Winner of the Game",
+      p.width / 2,
+      80
+    );
 
     const cx = (left + right) / 2;
     const cy = (top + bottom) / 2;
@@ -57,15 +74,27 @@ registerSketch('sk5', function (p) {
     p.scale(0.45);
     p.translate(-cx, -cy);
 
+    const zeroX = p.map(0, X_DOMAIN[0], X_DOMAIN[1], left, right);
+    const zeroY = p.map(0, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
+
+    // Quadrant shading
+    p.noStroke();
+    p.fill(245, 245, 255, 70);
+    p.rect(zeroX, top, right - zeroX, zeroY - top);
+    p.rect(left, zeroY, zeroX - left, bottom - zeroY);
+    p.fill(255, 245, 240, 70);
+    p.rect(left, top, zeroX - left, zeroY - top);
+    p.rect(zeroX, zeroY, right - zeroX, bottom - zeroY);
+
     // Axes
-    p.stroke(0);
+    p.stroke(30);
+    p.strokeWeight(2.5);
     p.line(left, bottom, right, bottom);
     p.line(left, top, left, bottom);
 
     // Zero lines
-    p.stroke(180);
-    const zeroX = p.map(0, X_DOMAIN[0], X_DOMAIN[1], left, right);
-    const zeroY = p.map(0, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
+    p.stroke(110);
+    p.strokeWeight(2);
     p.line(zeroX, top, zeroX, bottom);
     p.line(left, zeroY, right, zeroY);
 
