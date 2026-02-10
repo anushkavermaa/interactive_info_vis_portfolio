@@ -54,7 +54,7 @@ registerSketch('sk5', function (p) {
 
     p.noStroke();
     p.fill(244, 246, 249);
-    p.rect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    p.rect(0, 0, CANVAS_SIZE, CANVAS_SIZE + 200);
 
     const margin = 120;
     const headerH = 320;
