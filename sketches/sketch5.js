@@ -29,6 +29,16 @@ registerSketch('sk5', function (p) {
     return Number.isFinite(val) ? val : NaN;
   }
 
+  function drawArrow(x1, y1, x2, y2, size) {
+    p.line(x1, y1, x2, y2);
+    const angle = p.atan2(y2 - y1, x2 - x1);
+    p.push();
+    p.translate(x2, y2);
+    p.rotate(angle);
+    p.triangle(0, 0, -size, size * 0.6, -size, -size * 0.6);
+    p.pop();
+  }
+
   p.preload = function () {
     table = p.loadTable(
       "cfb_box-scores_2002-2025.csv",
@@ -112,6 +122,22 @@ registerSketch('sk5', function (p) {
     // Home more yards & home loss (x > 0, y < 0)
     p.fill(...redFill);
     p.rect(zeroX, zeroY, right - zeroX, bottom - zeroY);
+
+    // Arrow pointing to red quadrant (outside the plot)
+    p.stroke(0);
+    p.strokeWeight(2);
+    drawArrow(right + 50, zeroY + 40, (zeroX + right) / 2, (zeroY + bottom) / 2, 12);
+    p.noStroke();
+    p.fill(30);
+    p.textAlign(p.RIGHT, p.TOP);
+    p.textSize(22);
+    p.text(
+      "This quadrant indicates that the team with more yardage, the home team, lost the game",
+      right + 35,
+      zeroY + 6,
+      160,
+      180
+    );
 
     // Axes
     p.stroke(30);
