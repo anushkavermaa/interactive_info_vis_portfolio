@@ -127,16 +127,28 @@ registerSketch('sk5', function (p) {
     p.stroke(0);
     p.strokeWeight(2);
     drawArrow(right + 50, zeroY + 40, (zeroX + right) / 2, (zeroY + bottom) / 2, 12);
+    drawArrow(left - 50, top - 20, (left + zeroX) / 2, (top + zeroY) / 2, 12);
     p.noStroke();
     p.fill(30);
-    p.textAlign(p.RIGHT, p.TOP);
+    p.textAlign(p.CENTER, p.TOP);
     p.textSize(22);
     p.text(
-      "This quadrant indicates that the team with more yardage, the home team, lost the game",
-      right + 35,
-      zeroY + 6,
-      160,
-      180
+      "The green quadrants indicate that the team with more yardage ended up winning the game",
+      left - 245,
+      top - 90,
+      200,
+      240
+    );
+    p.noStroke();
+    p.fill(30);
+    p.textAlign(p.CENTER, p.TOP);
+    p.textSize(22);
+    p.text(
+      "The red quadrant indicates that the team with more yardage, the home team, lost the game",
+      right + 25,
+      zeroY - 10,
+      220,
+      260
     );
 
     // Axes
