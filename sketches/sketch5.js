@@ -94,13 +94,23 @@ registerSketch('sk5', function (p) {
     const zeroX = p.map(0, X_DOMAIN[0], X_DOMAIN[1], left, right);
     const zeroY = p.map(0, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
 
-    // Quadrant shading
+    // Quadrant shading (home team perspective)
     p.noStroke();
-    p.fill(245, 245, 255, 70);
+    const greenFill = [215, 241, 223, 140];
+    const redFill = [246, 210, 210, 150];
+
+    // Home more yards & home win (x > 0, y > 0)
+    p.fill(...greenFill);
     p.rect(zeroX, top, right - zeroX, zeroY - top);
-    p.rect(left, zeroY, zeroX - left, bottom - zeroY);
-    p.fill(255, 245, 240, 70);
+
+    // Home fewer yards & home win (x < 0, y > 0)
     p.rect(left, top, zeroX - left, zeroY - top);
+
+    // Home fewer yards & home loss (x < 0, y < 0)
+    p.rect(left, zeroY, zeroX - left, bottom - zeroY);
+
+    // Home more yards & home loss (x > 0, y < 0)
+    p.fill(...redFill);
     p.rect(zeroX, zeroY, right - zeroX, bottom - zeroY);
 
     // Axes
@@ -115,8 +125,28 @@ registerSketch('sk5', function (p) {
     p.line(zeroX, top, zeroX, bottom);
     p.line(left, zeroY, right, zeroY);
 
+    // Axis labels
+    p.noStroke();
+    p.fill(40);
+    p.textAlign(p.CENTER, p.TOP);
+    p.textStyle(p.BOLD);
+    p.textSize(18);
+    p.text("Difference in Total Yards (Home - Away)", (left + right) / 2, bottom + 16);
+    p.push();
+    p.translate(left - 48, (top + bottom) / 2);
+    p.rotate(-p.HALF_PI);
+    p.textAlign(p.CENTER, p.TOP);
+    p.text("Difference in Total Points (Home - Away)", 0, 0);
+    p.pop();
+    p.textStyle(p.NORMAL);
+
     // Points
     p.noStroke();
+    let sumX = 0;
+    let sumY = 0;
+    let sumXY = 0;
+    let sumXX = 0;
+    let count = 0;
 
     for (let i = 0; i < table.getRowCount(); i++) {
       const hy = getNumSafe(i, COL.total_yards_home);
@@ -144,12 +174,59 @@ registerSketch('sk5', function (p) {
 
       if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
 
+      const inBounds = x >= left && x <= right && y >= top && y <= bottom;
+      const alpha = inBounds ? 160 : 70;
+
+      sumX += yardDiff;
+      sumY += pointDiff;
+      sumXY += yardDiff * pointDiff;
+      sumXX += yardDiff * yardDiff;
+      count += 1;
+
       // Color by win/loss
-      if (pointDiff > 0) p.fill(212, 175, 55, 160);
-      else p.fill(106, 13, 173, 160);
+      if (pointDiff > 0) p.fill(212, 175, 55, alpha);
+      else p.fill(106, 13, 173, alpha);
 
       p.circle(x, y, 5);
     }
+
+    // Trend line (least squares)
+    if (count > 1) {
+      const denom = count * sumXX - sumX * sumX;
+      if (denom !== 0) {
+        const slope = (count * sumXY - sumX * sumY) / denom;
+        const intercept = (sumY - slope * sumX) / count;
+        const x1 = X_DOMAIN[0];
+        const x2 = X_DOMAIN[1];
+        const y1 = slope * x1 + intercept;
+        const y2 = slope * x2 + intercept;
+        const px1 = p.map(x1, X_DOMAIN[0], X_DOMAIN[1], left, right);
+        const py1 = p.map(y1, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
+        const px2 = p.map(x2, X_DOMAIN[0], X_DOMAIN[1], left, right);
+        const py2 = p.map(y2, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
+
+        p.stroke(30);
+        p.strokeWeight(3);
+        p.line(px1, py1, px2, py2);
+      }
+    }
+
+    // Legend
+    const legendY = bottom + 70;
+    const legendX = (left + right) / 2 - 170;
+    const dotSize = 10;
+    p.noStroke();
+    p.textAlign(p.LEFT, p.CENTER);
+    p.textSize(18);
+    p.fill(212, 175, 55, 180);
+    p.circle(legendX, legendY, dotSize);
+    p.fill(40);
+    p.text("Home team won", legendX + 16, legendY);
+
+    p.fill(106, 13, 173, 180);
+    p.circle(legendX + 180, legendY, dotSize);
+    p.fill(40);
+    p.text("Home team lost", legendX + 196, legendY);
 
     p.pop();
   };
