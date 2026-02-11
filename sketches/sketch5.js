@@ -96,7 +96,7 @@ registerSketch('sk5', function (p) {
     p.textStyle(p.NORMAL);
     p.textSize(26);
     p.text(
-      "Exploring the Relationship Between Total Yardage and the Winner of the Game",
+      "Exploring the Relationship Between the Rank of a Team and the Winner of the Game",
       titleX,
       titleY + titleLineH * 2 + 24
     );
