@@ -6,11 +6,11 @@ registerSketch('sk5', function (p) {
   const COL = {
     score_home: "score_home",
     score_away: "score_away",
-    total_yards_home: "total_yards_home",
-    total_yards_away: "total_yards_away",
+    rank_home: "rank_home",
+    rank_away: "rank_away",
   };
 
-  const X_DOMAIN = [-600, 600];
+  const X_DOMAIN = [-130, 130];
   const Y_DOMAIN = [-50, 50];
 
   // Parse numbers safely; return NaN if invalid
@@ -109,31 +109,33 @@ registerSketch('sk5', function (p) {
     const greenFill = [215, 241, 223, 140];
     const redFill = [246, 210, 210, 150];
 
-    // Home more yards & home win (x > 0, y > 0)
-    p.fill(...greenFill);
+    // Top-right quadrant
+    p.fill(...redFill);
     p.rect(zeroX, top, right - zeroX, zeroY - top);
 
-    // Home fewer yards & home win (x < 0, y > 0)
+    // Top-left quadrant
+    p.fill(...greenFill);
     p.rect(left, top, zeroX - left, zeroY - top);
 
-    // Home fewer yards & home loss (x < 0, y < 0)
+    // Bottom-left quadrant
+    p.fill(...redFill);
     p.rect(left, zeroY, zeroX - left, bottom - zeroY);
 
-    // Home more yards & home loss (x > 0, y < 0)
-    p.fill(...redFill);
+    // Bottom-right quadrant
+    p.fill(...greenFill);
     p.rect(zeroX, zeroY, right - zeroX, bottom - zeroY);
 
     // Arrow pointing to red quadrant (outside the plot)
     p.stroke(0);
     p.strokeWeight(2);
-    drawArrow(right + 50, zeroY + 40, (zeroX + right) / 2, (zeroY + bottom) / 2, 12);
+    drawArrow(right + 50, zeroY + 40, (left + zeroX) / 2, (zeroY + bottom) / 2, 12);
     drawArrow(left - 50, top - 20, (left + zeroX) / 2, (top + zeroY) / 2, 12);
     p.noStroke();
     p.fill(30);
     p.textAlign(p.CENTER, p.TOP);
     p.textSize(22);
     p.text(
-      "The green quadrants indicate that the team with more yardage ended up winning the game",
+      "The green quadrants indicate that the better-ranked team ended up winning the game",
       left - 245,
       top - 90,
       200,
@@ -144,7 +146,7 @@ registerSketch('sk5', function (p) {
     p.textAlign(p.CENTER, p.TOP);
     p.textSize(22);
     p.text(
-      "The red quadrant indicates that the team with more yardage, the home team, lost the game",
+      "The red quadrant indicates that the better-ranked home team lost the game",
       right + 25,
       zeroY - 10,
       220,
@@ -169,7 +171,7 @@ registerSketch('sk5', function (p) {
     p.textAlign(p.CENTER, p.TOP);
     p.textStyle(p.BOLD);
     p.textSize(18);
-    p.text("Difference in Total Yards (Home - Away)", (left + right) / 2, bottom + 16);
+    p.text("Difference in Team Rank (Home - Away)", (left + right) / 2, bottom + 16);
     p.push();
     p.translate(left - 48, (top + bottom) / 2);
     p.rotate(-p.HALF_PI);
@@ -187,27 +189,27 @@ registerSketch('sk5', function (p) {
     let count = 0;
 
     for (let i = 0; i < table.getRowCount(); i++) {
-      const hy = getNumSafe(i, COL.total_yards_home);
-      const ay = getNumSafe(i, COL.total_yards_away);
+      const hr = getNumSafe(i, COL.rank_home);
+      const ar = getNumSafe(i, COL.rank_away);
       const hs = getNumSafe(i, COL.score_home);
       const as = getNumSafe(i, COL.score_away);
 
       // Ignore rows with missing values
       if (
-        !Number.isFinite(hy) ||
-        !Number.isFinite(ay) ||
+        !Number.isFinite(hr) ||
+        !Number.isFinite(ar) ||
         !Number.isFinite(hs) ||
         !Number.isFinite(as)
       ) {
         continue;
       }
 
-      const yardDiff = hy - ay;
+      const rankDiff = hr - ar;
       const pointDiff = hs - as;
 
-      if (!Number.isFinite(yardDiff) || !Number.isFinite(pointDiff)) continue;
+      if (!Number.isFinite(rankDiff) || !Number.isFinite(pointDiff)) continue;
 
-      const x = p.map(yardDiff, X_DOMAIN[0], X_DOMAIN[1], left, right);
+      const x = p.map(rankDiff, X_DOMAIN[0], X_DOMAIN[1], left, right);
       const y = p.map(pointDiff, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
 
       if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
@@ -215,10 +217,10 @@ registerSketch('sk5', function (p) {
       const inBounds = x >= left && x <= right && y >= top && y <= bottom;
       const alpha = inBounds ? 160 : 70;
 
-      sumX += yardDiff;
+      sumX += rankDiff;
       sumY += pointDiff;
-      sumXY += yardDiff * pointDiff;
-      sumXX += yardDiff * yardDiff;
+      sumXY += rankDiff * pointDiff;
+      sumXX += rankDiff * rankDiff;
       count += 1;
 
       // Color by win/loss
@@ -226,27 +228,6 @@ registerSketch('sk5', function (p) {
       else p.fill(106, 13, 173, alpha);
 
       p.circle(x, y, 5);
-    }
-
-    // Trend line (least squares)
-    if (count > 1) {
-      const denom = count * sumXX - sumX * sumX;
-      if (denom !== 0) {
-        const slope = (count * sumXY - sumX * sumY) / denom;
-        const intercept = (sumY - slope * sumX) / count;
-        const x1 = X_DOMAIN[0];
-        const x2 = X_DOMAIN[1];
-        const y1 = slope * x1 + intercept;
-        const y2 = slope * x2 + intercept;
-        const px1 = p.map(x1, X_DOMAIN[0], X_DOMAIN[1], left, right);
-        const py1 = p.map(y1, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
-        const px2 = p.map(x2, X_DOMAIN[0], X_DOMAIN[1], left, right);
-        const py2 = p.map(y2, Y_DOMAIN[0], Y_DOMAIN[1], bottom, top);
-
-        p.stroke(30);
-        p.strokeWeight(3);
-        p.line(px1, py1, px2, py2);
-      }
     }
 
     // Legend
