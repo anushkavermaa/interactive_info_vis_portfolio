@@ -69,9 +69,10 @@ registerSketch('sk5', function (p) {
     const margin = 120;
     const headerH = 320;
     const plotSize = 500;
+    const plotOffsetY = 80;
     const availableH = CANVAS_SIZE - margin - headerH;
     const left = (CANVAS_SIZE - plotSize) / 2;
-    const top = headerH + (availableH - plotSize) / 2;
+    const top = headerH + (availableH - plotSize) / 2 + plotOffsetY;
     const right = left + plotSize;
     const bottom = top + plotSize;
 
@@ -87,7 +88,7 @@ registerSketch('sk5', function (p) {
     p.textStyle(p.BOLD);
     p.textSize(50);
     p.text(
-      "Can We Predict the Outcome\nof a College Football Game?",
+      "How Accurate Are Team Rankings at\nPredicting College Football\nGame Outcomes?",
       titleX,
       titleY
     );
@@ -96,9 +97,9 @@ registerSketch('sk5', function (p) {
     p.textStyle(p.NORMAL);
     p.textSize(26);
     p.text(
-      "Exploring the Relationship Between the Rank of a Team and the Winner of the Game",
+      "Pre-Game Team Rankings Usually Do a Good Job Predicting the Winner, But There\nAre Notable Exceptions",
       titleX,
-      titleY + titleLineH * 2 + 24
+      titleY + titleLineH * 3 + 40
     );
 
     const zeroX = p.map(0, X_DOMAIN[0], X_DOMAIN[1], left, right);
@@ -135,7 +136,7 @@ registerSketch('sk5', function (p) {
     p.textAlign(p.CENTER, p.TOP);
     p.textSize(22);
     p.text(
-      "The green quadrants indicate that the better-ranked team ended up winning the game",
+      "The green quadrants indicate that the better-ranked team ended up winning the game (expected outcome)",
       left - 245,
       top - 90,
       200,
@@ -146,8 +147,8 @@ registerSketch('sk5', function (p) {
     p.textAlign(p.CENTER, p.TOP);
     p.textSize(22);
     p.text(
-      "The red quadrant indicates that the better-ranked home team lost the game",
-      right + 25,
+      "The red quadrants indicates that the better-ranked home team lost the game (unexpected outcome)",
+      right + 35,
       zeroY - 10,
       220,
       260
