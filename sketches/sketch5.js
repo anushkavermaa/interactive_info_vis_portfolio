@@ -188,6 +188,7 @@ registerSketch('sk5', function (p) {
     let sumXY = 0;
     let sumXX = 0;
     let count = 0;
+    const points = [];
 
     for (let i = 0; i < table.getRowCount(); i++) {
       const hr = getNumSafe(i, COL.rank_home);
@@ -229,6 +230,7 @@ registerSketch('sk5', function (p) {
       else p.fill(106, 13, 173, alpha);
 
       p.circle(x, y, 7);
+      points.push({ x, y, rankDiff, pointDiff });
     }
 
     // Legend
@@ -247,6 +249,52 @@ registerSketch('sk5', function (p) {
     p.circle(legendX + 180, legendY, dotSize);
     p.fill(40);
     p.text("Home team lost", legendX + 196, legendY);
+
+    // Hover labels for readability without clutter
+    const mx = (p.mouseX - offsetX) / scale;
+    const my = (p.mouseY - offsetY) / scale;
+    let hover = null;
+    let minDistSq = 120;
+
+    for (const pt of points) {
+      const dx = mx - pt.x;
+      const dy = my - pt.y;
+      const distSq = dx * dx + dy * dy;
+      if (distSq < minDistSq) {
+        minDistSq = distSq;
+        hover = pt;
+      }
+    }
+
+    if (hover) {
+      const fmt = (val) => (Number.isInteger(val) ? val.toString() : val.toFixed(1));
+      const lines = [
+        `Rank diff: ${fmt(hover.rankDiff)}`,
+        `Point diff: ${fmt(hover.pointDiff)}`,
+      ];
+      const pad = 6;
+      const lineH = 18;
+      p.textSize(14);
+      p.textAlign(p.LEFT, p.TOP);
+      let maxW = 0;
+      for (const line of lines) maxW = Math.max(maxW, p.textWidth(line));
+      const boxW = maxW + pad * 2;
+      const boxH = lines.length * lineH + pad * 2;
+      let boxX = hover.x + 12;
+      let boxY = hover.y - boxH - 12;
+
+      if (boxX + boxW > right) boxX = hover.x - boxW - 12;
+      if (boxY < top) boxY = hover.y + 12;
+
+      p.fill(255, 245);
+      p.stroke(40);
+      p.rect(boxX, boxY, boxW, boxH, 4);
+      p.noStroke();
+      p.fill(30);
+      for (let i = 0; i < lines.length; i++) {
+        p.text(lines[i], boxX + pad, boxY + pad + i * lineH);
+      }
+    }
 
     p.pop();
   };
