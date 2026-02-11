@@ -94,10 +94,11 @@ registerSketch('sk5', function (p) {
     );
     p.textAlign(p.LEFT, p.TOP);
     p.textFont("Helvetica");
-    p.textStyle(p.NORMAL);
-    p.textSize(26);
+    p.textStyle(p.BOLD);
+    p.textSize(28);
+    p.fill(10);
     p.text(
-      "Pre-Game Team Rankings Usually Do a Good Job Predicting the Winner, But There\nAre Notable Exceptions",
+      "Pre-Game Team Rankings Usually Do a Good Job Predicting the Winner,\nBut There Are Notable Exceptions",
       titleX,
       titleY + titleLineH * 3 + 40
     );
@@ -134,6 +135,7 @@ registerSketch('sk5', function (p) {
     p.noStroke();
     p.fill(30);
     p.textAlign(p.CENTER, p.TOP);
+    p.textStyle(p.NORMAL);
     p.textSize(22);
     p.text(
       "The green quadrants indicate that the better-ranked team ended up winning the game (expected outcome)",
