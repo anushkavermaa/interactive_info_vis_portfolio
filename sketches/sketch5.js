@@ -10,8 +10,8 @@ registerSketch('sk5', function (p) {
     rank_away: "rank_away",
   };
 
-  const X_DOMAIN = [-130, 130];
-  const Y_DOMAIN = [-50, 50];
+  const X_DOMAIN = [-60, 60];
+  const Y_DOMAIN = [-30, 30];
 
   // Parse numbers safely; return NaN if invalid
   function getNumSafe(row, col) {
@@ -128,7 +128,7 @@ registerSketch('sk5', function (p) {
     // Arrow pointing to red quadrant (outside the plot)
     p.stroke(0);
     p.strokeWeight(2);
-    drawArrow(right + 50, zeroY + 40, (left + zeroX) / 2, (zeroY + bottom) / 2, 12);
+    drawArrow(right + 50, zeroY + 40, (zeroX + right) / 2, (top + zeroY) / 2, 12);
     drawArrow(left - 50, top - 20, (left + zeroX) / 2, (top + zeroY) / 2, 12);
     p.noStroke();
     p.fill(30);
@@ -227,7 +227,7 @@ registerSketch('sk5', function (p) {
       if (pointDiff > 0) p.fill(212, 175, 55, alpha);
       else p.fill(106, 13, 173, alpha);
 
-      p.circle(x, y, 5);
+      p.circle(x, y, 7);
     }
 
     // Legend
