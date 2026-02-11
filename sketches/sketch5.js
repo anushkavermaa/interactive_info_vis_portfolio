@@ -64,7 +64,7 @@ registerSketch('sk5', function (p) {
 
     p.noStroke();
     p.fill(244, 246, 249);
-    p.rect(0, 0, CANVAS_SIZE, CANVAS_SIZE + 200);
+    p.rect(0, 0, CANVAS_SIZE, CANVAS_SIZE + 100);
 
     const margin = 120;
     const headerH = 320;
@@ -171,7 +171,7 @@ registerSketch('sk5', function (p) {
     p.fill(40);
     p.textAlign(p.CENTER, p.TOP);
     p.textStyle(p.BOLD);
-    p.textSize(18);
+    p.textSize(22);
     p.text("Difference in Team Rank (Home - Away)", (left + right) / 2, bottom + 16);
     p.push();
     p.translate(left - 48, (top + bottom) / 2);
@@ -234,21 +234,21 @@ registerSketch('sk5', function (p) {
     }
 
     // Legend
-    const legendY = bottom + 70;
+    const legendY = bottom + 125;
     const legendX = (left + right) / 2 - 170;
     const dotSize = 10;
     p.noStroke();
     p.textAlign(p.LEFT, p.CENTER);
-    p.textSize(18);
+    p.textSize(22);
     p.fill(212, 175, 55, 180);
     p.circle(legendX, legendY, dotSize);
     p.fill(40);
     p.text("Home team won", legendX + 16, legendY);
 
     p.fill(106, 13, 173, 180);
-    p.circle(legendX + 180, legendY, dotSize);
+    p.circle(legendX + 190, legendY, dotSize);
     p.fill(40);
-    p.text("Home team lost", legendX + 196, legendY);
+    p.text("Home team lost", legendX + 206, legendY);
 
     // Hover labels for readability without clutter
     const mx = (p.mouseX - offsetX) / scale;
