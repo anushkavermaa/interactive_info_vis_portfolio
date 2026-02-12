@@ -138,7 +138,7 @@ registerSketch('sk5', function (p) {
     p.textStyle(p.NORMAL);
     p.textSize(22);
     p.text(
-      "The green quadrants indicate that the better-ranked team ended up winning the game (expected outcome)",
+      "The green quadrants indicate that the better-ranked team won the game (expected outcome)",
       left - 245,
       top - 90,
       200,
@@ -149,7 +149,7 @@ registerSketch('sk5', function (p) {
     p.textAlign(p.CENTER, p.TOP);
     p.textSize(22);
     p.text(
-      "The red quadrants indicates that the better-ranked home team lost the game (unexpected outcome)",
+      "The red quadrants indicate that the better-ranked home team lost the game (unexpected outcome)",
       right + 35,
       zeroY - 10,
       220,
